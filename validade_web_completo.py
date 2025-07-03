@@ -135,11 +135,23 @@ if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
 st.info("⏳ Validade a ser somada: **" + " e ".join(val_texto) + "**")
 
 # 📅 Data de validade original da matéria-prima
-# 📆 Cálculo da nova validade estendida a partir de hoje
+
+# 📆 Selecione o mês e ano base para o cálculo da validade
+st.subheader("📆 Data base considerada para cálculo:")
+col1, col2 = st.columns(2)
+with col1:
+    mes_atual = datetime.today().month
+    mes = st.selectbox("Mês", list(range(1, 13)), index=mes_atual - 1,
+                       format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
+with col2:
+    ano_atual = datetime.today().year
+    ano = st.number_input("Ano", value=ano_atual, min_value=2020, max_value=2035, step=1)
+
+# 📆 Cálculo da nova validade estendida com base na data escolhida
 if st.button("Calcular nova validade"):
-    validade_atual = datetime.today()
+    validade_atual = datetime(ano, mes, 1)
     nova_validade = validade_atual + relativedelta(years=anos, months=meses, days=dias)
     dias_ate_nova = (nova_validade - datetime.today()).days
 
-    st.markdown(f"📅 **Nova data de vencimento (a partir de hoje):** {nova_validade.strftime('%d/%m/%Y')}")
+    st.markdown(f"📅 **Nova data de vencimento:** {nova_validade.strftime('%d/%m/%Y')}")
     st.markdown(f"⏳ **Dias restantes até o novo vencimento:** {dias_ate_nova} dias")
