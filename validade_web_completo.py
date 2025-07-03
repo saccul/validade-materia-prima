@@ -3,10 +3,10 @@ import streamlit as st
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-st.set_page_config(page_title="Validade Estendida da Matéria-Prima", layout="centered")
+st.set_page_config(page_title="Validade Estendida", layout="centered")
 st.title("📦 Calculadora de Validade Estendida")
 
-# 🔸 Lista completa de produtos com validade padrão
+# Lista de itens com validade padrão
 itens = {
     "AÇAFRÃO 6X20G LENA C&E": {"anos": 2, "meses": 0, "dias": 0},
     "ALECRIM 6X20G LENA C&E": {"anos": 2, "meses": 0, "dias": 0},
@@ -91,7 +91,6 @@ itens = {
 }
 
 
-# ➕ Adicionar novo item manualmente (sessão atual)
 st.sidebar.subheader("➕ Adicionar novo item (sessão atual)")
 with st.sidebar.form("form_novo_item"):
     novo_nome = st.text_input("Nome do novo produto:")
@@ -111,15 +110,14 @@ with st.sidebar.form("form_novo_item"):
         }
         st.sidebar.success("Item adicionado com sucesso!")
 
-# 🔎 Seleção do produto
 st.subheader("🧾 Selecione o produto:")
 produto = st.selectbox("Produto:", sorted(itens.keys()))
 
-# 🔧 Ajuste de validade (opcional)
 validade_padrao = itens[produto]
 anos, meses, dias = validade_padrao["anos"], validade_padrao["meses"], validade_padrao["dias"]
 
-if st.checkbox("Deseja ajustar manualmente a validade deste item?"):
+ajuste_manual = st.checkbox("Deseja ajustar manualmente a validade deste item?")
+if ajuste_manual:
     col1, col2, col3 = st.columns(3)
     with col1:
         anos = st.number_input("Anos", min_value=0, step=1, key="anos_custom")
@@ -132,21 +130,22 @@ val_texto = []
 if anos: val_texto.append(f"{anos} ano{'s' if anos > 1 else ''}")
 if meses: val_texto.append(f"{meses} mês{'es' if meses > 1 else ''}")
 if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
-st.info("⏳ Validade a ser somada: **" + " e ".join(val_texto) + "**")
+st.info("⏳ Validade usada: **" + " e ".join(val_texto) + "**")
 
-# 📅 Data de validade original da matéria-prima
 st.subheader("📅 Informe o mês e o ano de fabricação da matéria-prima:")
 col1, col2 = st.columns(2)
 with col1:
-    mes = st.selectbox("Mês da validade atual", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
+    mes = st.selectbox("Mês", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
 with col2:
-    ano = st.number_input("Ano da validade atual", min_value=2020, max_value=2035, step=1)
+    ano = st.number_input("Ano", min_value=2020, max_value=2035, step=1)
 
-# 📆 Cálculo da nova validade estendida
-if st.button("Calcular nova validade"):
-    validade_atual = datetime(ano, mes, 1)
-    nova_validade = validade_atual + relativedelta(years=anos, months=meses, days=dias)
-    dias_ate_nova = (nova_validade - datetime.today()).days
+if st.button("Calcular validade"):
+    if ajuste_manual:
+        data_base = datetime.today()
+    else:
+        data_base = datetime(ano, mes, 1)
+    data_vencimento = data_base + relativedelta(years=anos, months=meses, days=dias)
+    dias_ate_nova = (data_vencimento - datetime.today()).days
 
-    st.markdown(f"📅 **Nova data de vencimento:** {nova_validade.strftime('%d/%m/%Y')}")
+    st.markdown(f"📅 **Nova data de vencimento:** {data_vencimento.strftime('%d/%m/%Y')}")
     st.markdown(f"⏳ **Dias restantes até o novo vencimento:** {dias_ate_nova} dias")
