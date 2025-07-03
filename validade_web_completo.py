@@ -132,12 +132,13 @@ if meses: val_texto.append(f"{meses} mês{'es' if meses > 1 else ''}")
 if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
 st.info("⏳ Validade usada: **" + " e ".join(val_texto) + "**")
 
-st.subheader("📅 Informe o mês e o ano de fabricação da matéria-prima:")
-col1, col2 = st.columns(2)
-with col1:
-    mes = st.selectbox("Mês", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
-with col2:
-    ano = st.number_input("Ano", min_value=2020, max_value=2035, step=1)
+if not ajuste_manual:
+    st.subheader("📅 Informe o mês e o ano de fabricação da matéria-prima:")
+    col1, col2 = st.columns(2)
+    with col1:
+        mes = st.selectbox("Mês", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
+    with col2:
+        ano = st.number_input("Ano", min_value=2020, max_value=2035, step=1)
 
 if st.button("Calcular validade"):
     if ajuste_manual:
