@@ -142,13 +142,19 @@ if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
 st.info("⏳ Validade usada: **" + " e ".join(val_texto) + "**")
 
 
-# Nova opção: usuário escolhe a base de cálculo
+# Exibe escolha de base de data (visível fora do bloco condicional)
 opcao_base = st.radio("📌 Qual base de data você deseja usar?", [
     "Usar o início do mês informado",
     "Usar a data de hoje se já estiver dentro do mês informado"
 ])
 
+
 if not ajuste_manual:
+    opcao_base = st.radio("📌 Qual base de data você deseja usar?", [
+        "Usar o início do mês informado",
+        "Usar a data de hoje se já estiver dentro do mês informado"
+    ])
+
 
     st.subheader("📅 Informe o mês e o ano de fabricação da matéria-prima:")
     col1, col2 = st.columns(2)
