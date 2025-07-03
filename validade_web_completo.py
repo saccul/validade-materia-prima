@@ -135,7 +135,7 @@ if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
 st.info("⏳ Validade a ser somada: **" + " e ".join(val_texto) + "**")
 
 # 📅 Data de validade original da matéria-prima
-st.subheader("📅 Informe o mês e o ano da validade atual da matéria-prima:")
+st.subheader("📅 Informe o mês e o ano de fabricação da matéria-prima:")
 col1, col2 = st.columns(2)
 with col1:
     mes = st.selectbox("Mês da validade atual", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
