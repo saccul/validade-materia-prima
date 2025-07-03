@@ -3,8 +3,8 @@ import streamlit as st
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-st.set_page_config(page_title="Validade de Matéria-Prima", layout="centered")
-st.title("📦 Verificador de Validade de Matéria-Prima")
+st.set_page_config(page_title="Validade Estendida da Matéria-Prima", layout="centered")
+st.title("📦 Calculadora de Validade Estendida")
 
 # 🔸 Lista completa de produtos com validade padrão
 itens = {
@@ -132,27 +132,21 @@ val_texto = []
 if anos: val_texto.append(f"{anos} ano{'s' if anos > 1 else ''}")
 if meses: val_texto.append(f"{meses} mês{'es' if meses > 1 else ''}")
 if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
-st.info("⏳ Validade usada: **" + " e ".join(val_texto) + "**")
+st.info("⏳ Validade a ser somada: **" + " e ".join(val_texto) + "**")
 
-# 📅 Data de fabricação
-st.subheader("📅 Informe o mês e o ano de validade da matéria-prima:")
+# 📅 Data de validade original da matéria-prima
+st.subheader("📅 Informe o mês e o ano da validade atual da matéria-prima:")
 col1, col2 = st.columns(2)
 with col1:
-    mes = st.selectbox("Mês", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
+    mes = st.selectbox("Mês da validade atual", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
 with col2:
-    ano = st.number_input("Ano", min_value=2020, max_value=2035, step=1)
+    ano = st.number_input("Ano da validade atual", min_value=2020, max_value=2035, step=1)
 
-# 📆 Cálculo da validade
-if st.button("Calcular validade"):
-    data_fabricacao = datetime(ano, mes, 1)
-    data_vencimento = data_fabricacao + relativedelta(years=anos, months=meses, days=dias)
-    hoje = datetime.today()
-    dias_restantes = (data_vencimento - hoje).days
+# 📆 Cálculo da nova validade estendida
+if st.button("Calcular nova validade"):
+    validade_atual = datetime(ano, mes, 1)
+    nova_validade = validade_atual + relativedelta(years=anos, months=meses, days=dias)
+    dias_ate_nova = (nova_validade - datetime.today()).days
 
-    st.markdown(f"📆 **Data de vencimento:** {data_vencimento.strftime('%d/%m/%Y')}")
-    if dias_restantes < 0:
-        st.error("❌ Produto VENCIDO")
-    elif dias_restantes <= 7:
-        st.warning(f"⚠️ Próximo do vencimento! Restam {dias_restantes} dias")
-    else:
-        st.success(f"✅ Produto dentro do prazo! Restam {dias_restantes} dias")
+    st.markdown(f"📅 **Nova data de vencimento:** {nova_validade.strftime('%d/%m/%Y')}")
+    st.markdown(f"⏳ **Dias restantes até o novo vencimento:** {dias_ate_nova} dias")
