@@ -141,15 +141,7 @@ if meses: val_texto.append(f"{meses} mês{'es' if meses > 1 else ''}")
 if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
 st.info("⏳ Validade usada: **" + " e ".join(val_texto) + "**")
 
-
-# Nova opção: usuário escolhe a base de cálculo
-opcao_base = st.radio("📌 Qual base de data você deseja usar?", [
-    "Usar o início do mês informado",
-    "Usar a data de hoje se já estiver dentro do mês informado"
-])
-
 if not ajuste_manual:
-
     st.subheader("📅 Informe o mês e o ano de fabricação da matéria-prima:")
     col1, col2 = st.columns(2)
     with col1:
@@ -161,13 +153,7 @@ if st.button("Calcular validade"):
     if ajuste_manual:
         data_base = datetime.today()
     else:
-        
-    data_base = datetime(int(ano), int(mes), 1)
-    if opcao_base == "Usar a data de hoje se já estiver dentro do mês informado":
-        hoje = datetime.today()
-        if (int(ano), int(mes)) <= (hoje.year, hoje.month):
-            data_base = hoje
-    
+        data_base = datetime(int(ano), int(mes), 1)
     data_vencimento = data_base + relativedelta(years=anos, months=meses, days=dias)
     dias_ate_nova = (data_vencimento - datetime.today()).days
 
