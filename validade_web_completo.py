@@ -135,7 +135,7 @@ if dias: val_texto.append(f"{dias} dia{'s' if dias > 1 else ''}")
 st.info("⏳ Validade usada: **" + " e ".join(val_texto) + "**")
 
 # 📅 Data de fabricação
-st.subheader("📅 Informe o mês e o ano de fabricação:")
+st.subheader("📅 Informe o mês e o ano de validade da matéria-prima:")
 col1, col2 = st.columns(2)
 with col1:
     mes = st.selectbox("Mês", list(range(1, 13)), format_func=lambda m: datetime(2000, m, 1).strftime('%B').capitalize())
