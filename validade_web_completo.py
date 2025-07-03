@@ -163,7 +163,7 @@ if st.button("Calcular validade"):
     if ajuste_manual:
         data_base = datetime.today()
     else:
-        
+        data_base = datetime(int(ano), int(mes), 1)
     data_base = datetime(int(ano), int(mes), 1)
     if opcao_base == "Usar a data de hoje se já estiver dentro do mês informado":
         hoje = datetime.today()
@@ -218,7 +218,7 @@ if st.button("Calcular validade"):
     if ajuste_manual:
         data_base = datetime.today()
     else:
-        data_base = datetime(int(ano), int(mes), 1)
+    data_base = datetime(int(ano), int(mes), 1)
         if opcao_base == "Usar a data de hoje se já estiver dentro do mês informado":
             hoje = datetime.today()
             if (int(ano), int(mes)) <= (hoje.year, hoje.month):
